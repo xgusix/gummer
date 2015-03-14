@@ -7,7 +7,7 @@ written in python.
 The name of this framework comes from a very famous *gravoid* hunter called Burt
 Gummer, who appears in all the *Tremors* movies.
 
-![BurtGummer_zps8c29be34.jpg](https://bitbucket.org/repo/8AbnGg/images/2099957235-BurtGummer_zps8c29be34.jpg)
+![BurtGummer.jpg](https://raw.githubusercontent.com/xgusix/gummer/master/doc/BurtGummer.jpg)
 
 Also, this: [gummer](http://www.urbandictionary.com/define.php?term=gummer) @ 
 urbandictionary.com
@@ -71,7 +71,7 @@ In order to make it flexible, the framework is based on different modules: there
 is the main executable, gummer.py, which is supported by some other auxiliary
 functions, and there are the modules of the framework.
 
-![Gummer FW.png](https://bitbucket.org/repo/8AbnGg/images/3789581854-Screen%20Shot%202015-02-16%20at%205.27.26%20PM.png)
+![Gummer FW.png](https://raw.githubusercontent.com/xgusix/gummer/master/doc/modules.png)
 
 #Modules
 
