@@ -4,6 +4,7 @@ aid = '401' # Must be unique
 name = "Mongo db connector"
 desc = "Connector for the mongo database <db name>."
 
+#Modify with your parameters
 HOST = "localhost"
 PORT = 27017
 DB = "test"

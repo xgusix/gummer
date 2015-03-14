@@ -4,6 +4,7 @@ aid = '201' # Must be unique
 name = "Sqlite db connector"
 desc = "Connector for the sqlite database test.db.\n Returs a the cursor."
 
+#Modify with your parameters
 DB = '/home/xgusix/Projects/gummer/test.db'
 
 def queryDB(query):
