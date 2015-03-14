@@ -26,7 +26,8 @@ you are not specifically looking for this kind of threat. This is because the s
 earch of anomalies, or “weak signals”, can lead to a high number of false 
 positives, which will result in people spending time reviewing the alerts.
 
-Gummer is executed from the command line and it is multiplatform.
+Gummer is executed from the command line, it is multiplatform and it's in a
+beta stage.
 
 ## Using Gummer
 
