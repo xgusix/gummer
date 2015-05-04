@@ -1,0 +1,271 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Gummer by xgusix</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Gummer</h1>
+        <p class="header">Gummer, a framework for hunting APTs</p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/xgusix/gummer/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/xgusix/gummer/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/xgusix/gummer">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/xgusix">xgusix</a></p>
+
+
+      </header>
+      <section>
+        <h1>
+<a id="gummer" class="anchor" href="#gummer" aria-hidden="true"><span class="octicon octicon-link"></span></a>Gummer</h1>
+
+<h2>
+<a id="what-is-gummer" class="anchor" href="#what-is-gummer" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is Gummer?</h2>
+
+<p>Gummer is a framework for hunting malware. It is based on anomalies and it is 
+written in python.</p>
+
+<p>The name of this framework comes from a very famous <em>gravoid</em> hunter called Burt
+Gummer, who appears in all the <em>Tremors</em> movies.</p>
+
+<p><img src="https://raw.githubusercontent.com/xgusix/gummer/master/doc/BurtGummer.jpg" alt="BurtGummer.jpg"></p>
+
+<p>Also, this: <a href="http://www.urbandictionary.com/define.php?term=gummer">gummer</a> @ 
+urbandictionary.com</p>
+
+<p>Gummer is basically a database query engine. It provides an easy way to have 
+your list of anomalies connected to your different databases, returning the
+results in different formats.</p>
+
+<p>Gummer was mainly created with the purpose of reducing the detection time of the
+increasing number of the so-called APTs. It also happens to be very helpful for
+Incident Response tasks, when trying to contain an incident and not knowing
+where to start the analysis.</p>
+
+<p>It’s important to highlight that using Gummer as an IDS is not recommended if
+you are not specifically looking for this kind of threat. This is because the s
+earch of anomalies, or “weak signals”, can lead to a high number of false 
+positives, which will result in people spending time reviewing the alerts.</p>
+
+<p>Gummer is executed from the command line, it is multiplatform and it's in a
+beta stage.</p>
+
+<h2>
+<a id="using-gummer" class="anchor" href="#using-gummer" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using Gummer</h2>
+
+<p>When we want to spot a specific anomaly, we run Gummer from the CLI, as follows:</p>
+
+<pre><code>python gummer.py –a &lt;analyzer_id&gt; -db &lt;db_connector_id&gt; -o &lt;output_id&gt;
+</code></pre>
+
+<p>In the above command, we are passing the arguments of the different modules that
+Gummer will use during its execution.</p>
+
+<h2>
+<a id="gummer-options" class="anchor" href="#gummer-options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Gummer options:</h2>
+
+<pre><code>$ python gummer.py -h
+usage: gummer.py [-h] [-l] [-ldb] [-lo] [-lc] [-a ANALYZER] [-db DBCONNECTOR]
+                 [-o OUTPUT] [-c COLLECTOR]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -l, --list_anal       List analyzers.
+  -ldb, --list_databases
+                        List db connectors.
+  -lo, --list_outputs   List possible output formats.
+  -lc, --list_collectors
+                        List collectors.
+  -a ANALYZER, --analyzer ANALYZER
+                        ID of the analyzer to use.
+  -db DBCONNECTOR, --dbconnector DBCONNECTOR
+                        ID of the database connector to use.
+  -o OUTPUT, --output OUTPUT
+                        ID of the output to use.
+  -c COLLECTOR, --collector COLLECTOR
+                        ID of the collector to use.
+</code></pre>
+
+<h1>
+<a id="the-framework" class="anchor" href="#the-framework" aria-hidden="true"><span class="octicon octicon-link"></span></a>The framework</h1>
+
+<p>This framework is based on a working instance of a similar product that I worked
+with in the past. The product proved to work well, so I decided to write my own
+version of it, making it easier to adapt to different environments.</p>
+
+<p>In order to make it flexible, the framework is based on different modules: there
+is the main executable, gummer.py, which is supported by some other auxiliary
+functions, and there are the modules of the framework.</p>
+
+<p><img src="https://raw.githubusercontent.com/xgusix/gummer/master/doc/modules.png" alt="Gummer FW.png"></p>
+
+<h1>
+<a id="modules" class="anchor" href="#modules" aria-hidden="true"><span class="octicon octicon-link"></span></a>Modules</h1>
+
+<p>The modules are small snippets of code that are imported on demand by
+<em>gummer.py</em>. They perform different tasks and are connected by <em>gummer.py</em> to
+perform the search of the anomalies on any of our databases and do whatever we
+want with the output.</p>
+
+<p>There are four kinds of modules: Collectors, Outputs, Analyzers and Database
+connectors</p>
+
+<h2>
+<a id="collectors" class="anchor" href="#collectors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Collectors</h2>
+
+<p>The first thing we need to do when working with Gummer is to feed data to it.
+To do that, we use the collectors.</p>
+
+<p>A collector is a parser that processes the logs and inserts them into a database.
+To start a collection process you must execute the following command:</p>
+
+<pre><code>python gummer.py –c &lt;collector_id&gt; -db &lt;db_connector_id&gt; -o &lt;output_id&gt;
+</code></pre>
+
+<p>The general structure of a collector is the following:</p>
+
+<div class="highlight highlight-python"><pre><span class="pl-k">import</span> db_loader
+
+aid <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>unique_id<span class="pl-pds">"</span></span>
+name <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>name of the collector<span class="pl-pds">"</span></span>
+desc <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>Description of the collector<span class="pl-pds">"</span></span>
+
+<span class="pl-k">def</span> <span class="pl-en">launch</span>(<span class="pl-smi">connector</span>):
+    <span class="pl-s"><span class="pl-pds">"""</span></span>
+<span class="pl-s">    Parselog and DB insertion</span>
+<span class="pl-s">    query = "insert..."</span>
+<span class="pl-s">    data = db_loader.db_query(connector, query)</span>
+<span class="pl-s">    <span class="pl-pds">"""</span></span>
+    <span class="pl-k">return</span> suc, fail <span class="pl-c">#Returns de number of successful and failed insertions.</span></pre></div>
+
+<p>We need to import <em>db_loader</em> to be able to connect to the database from which
+we are going to get the data. That is also the reason why the function <em>launch</em>
+receives "connector". "connector" is the module that connects to the database
+from which the analyzer is going to retrieve the information.</p>
+
+<p>Usually (and up until now I haven’t found a different way to do this), when I
+want to parse a log file I process it and insert the entries one by one in the
+database. To do this, I use a loop where I keep count of the successful and
+failed insertions. This count is what needs to be returned at the end of the
+collection.</p>
+
+<p>This count is only useful for debugging and logging purposes, so you can just
+parse the log, insert the different lines in the database and then
+"return 0, 0".</p>
+
+<h2>
+<a id="outputs" class="anchor" href="#outputs" aria-hidden="true"><span class="octicon octicon-link"></span></a>Outputs</h2>
+
+<p>The output modules perform the actions needed in order to return the data in
+the desired format. What does that mean? Basically, you can do whatever you
+want/can with the output.</p>
+
+<p>The output module receives data and processes it in any way you want. The
+supplied examples are designed to print in the CLI, but you can write connectors
+ to SIEMs, send the results via e-mail... mostly anything you want.</p>
+
+<p>The basic structure of an output module is the following:</p>
+
+<div class="highlight highlight-python"><pre>aid <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>unique_id<span class="pl-pds">"</span></span>
+name <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>name of the output<span class="pl-pds">"</span></span>
+desc <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>Description of the output<span class="pl-pds">"</span></span>
+
+<span class="pl-k">def</span> <span class="pl-en">launch</span>(<span class="pl-smi">data</span>):
+    <span class="pl-s"><span class="pl-pds">"""</span>Process data<span class="pl-pds">"""</span></span></pre></div>
+
+<p>If you launch a command without specifying any output, it will use the default
+output. The default output is define in the global variable “DEFAULT_OUTPUT” in
+<em>gummer.py</em>.</p>
+
+<h2>
+<a id="analyzers" class="anchor" href="#analyzers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Analyzers</h2>
+
+<p>Analyzers are the core of Gummer. You must have in mind that all the value of
+this framework is in the anomalies that you define within the analyzers.</p>
+
+<p>Gummer queries databases to search for the data needed to define the different
+anomalies. The data retuned by these anomalies is normally going to be the
+result of a query, but the functionality of the analyzers is only limited by
+your knowledge of python.</p>
+
+<p>Executing an analyzer:</p>
+
+<pre><code>python gummer.py –a &lt;analyzer_id&gt; -db &lt;db_connector_id&gt; -o &lt;output_id&gt;
+</code></pre>
+
+<p>The structure of an analyzer is the following:</p>
+
+<div class="highlight highlight-python"><pre><span class="pl-k">import</span> db_loader
+
+aid <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>unique_id<span class="pl-pds">"</span></span>
+name <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>name of the analyzer<span class="pl-pds">"</span></span>
+desc <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>Description of the analyzer<span class="pl-pds">"</span></span>
+
+<span class="pl-k">def</span> <span class="pl-en">launch</span>(<span class="pl-smi">connector</span>):
+    <span class="pl-s"><span class="pl-pds">"""</span>Definition of the analyzer<span class="pl-pds">"""</span></span>
+    query <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>select * from db<span class="pl-pds">"</span></span>
+    data <span class="pl-k">=</span> db_loader.db_query(connector, query)
+    <span class="pl-k">return</span> data</pre></div>
+
+<p>We need to import <em>db_loader</em> to be able to connect to the database from which
+we are going to get the data. That is also the reason why the function <em>launch</em>
+receives "connector". "connector" is the module that connects to the database
+from which the analyzer is going to retrieve the information.</p>
+
+<p>The result of the query is stored in the variable data and it is returned to
+<em>gummer.py</em> in order to be passed to the selected output module. Therefore,
+it’s very important that the data type stored in the variable returned by the
+analyzers is compatible with the selected output module.</p>
+
+<h2>
+<a id="db-connectors" class="anchor" href="#db-connectors" aria-hidden="true"><span class="octicon octicon-link"></span></a>DB Connectors</h2>
+
+<p>The DB connectors are the modules that allow the other modules to connect to the
+different databases.</p>
+
+<p>These modules have to be very flexible and execute any query they receive. Thus,
+their function is basically: to open a connection with the DB, execute a query,
+close the connection, and return the information retrieved. You can find some
+examples of the code in the folder <em>db_connectors</em>.</p>
+
+<h1>
+<a id="publishing-anomaliesanalyzers" class="anchor" href="#publishing-anomaliesanalyzers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Publishing Anomalies/Analyzers.</h1>
+
+<p>There are only three anomalies published with the framework under the path: 
+analyzers/APT_book. These anomalies were published by the Dr. Eric Cole in the
+book <a href="http://www.bookdepository.com/Advanced-Persistent-Threat-Eric-Cole/9781597499491">Advanced Persistence Threat</a>.</p>
+
+<p>There are two main reasons why I won't publicly share more anomalies. The first
+one is because if all these "rules" for hunting are made public, malware authors
+can learn how to avoid them, which makes detection even harder. The second one
+has to do with the NDAs that I have signed with the companies I’ve worked for.</p>
+
+<p>I am definitely not against sharing this kind of knowledge. I just don't like
+the idea of publishing it for everyone to see. There are communities, trusted
+circles, where people exchange Yara rules, IoCs, etc. among the trusted people
+who are part of those groups. If you want to create a community to share
+analyzers, I'll be very happy to join you and support it, but I really just
+refuse to share anomalies in the public repo.</p>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		
+  </body>
+</html>
